@@ -23,13 +23,13 @@ class Facebook_Api(object):
 
         # Kiểm tra nếu 'c_user=' không có trong cookie
         if 'c_user=' not in cookie:
-            raise ValueError("❌ Lỗi: Cookie không hợp lệ hoặc đã hết hạn!")
+            raise ValueError("Lỗi: Cookie không hợp lệ hoặc đã hết hạn!")
 
         try:
             self.user_id = cookie.split('c_user=')[1].split(';')[0]
-            print(f"✅ Đã lấy User ID: {self.user_id}")
+            
         except IndexError:
-            raise ValueError("❌ Lỗi: Không thể lấy user_id từ cookie!")
+            raise ValueError("Lỗi: Cookie")
 
         self.headers = {
             'authority': 'mbasic.facebook.com',
@@ -57,24 +57,24 @@ class Facebook_Api(object):
             
             # Kiểm tra nếu response không thành công
             if response.status_code != 200:
-                print("❌ Lỗi: Không thể lấy thông tin tài khoản!")
+                print("Lỗi: Không thể lấy thông tin tài khoản!")
                 return None, None
 
             home = response.text
             
             # Kiểm tra xem fb_dtsg và jazoest có tồn tại trong response không
             if '<input type="hidden" name="fb_dtsg" value="' not in home or '<input type="hidden" name="jazoest" value="' not in home:
-                print("❌ Lỗi: Cookie không hợp lệ hoặc đã hết hạn!")
+                print("Lỗi: Cookie không hợp lệ hoặc đã hết hạn!")
                 return None, None
 
             self.fb_dtsg = home.split('<input type="hidden" name="fb_dtsg" value="')[1].split('"')[0]
             self.jazoest = home.split('<input type="hidden" name="jazoest" value="')[1].split('"')[0]
             ten = home.split('<title>')[1].split('</title>')[0].strip()
 
-            #print(f"✅ Tên Facebook: {ten} | ID: {self.user_id}")
+            
             return ten, self.user_id
         except Exception as e:
-            print(f"❌ Lỗi: {str(e)}")
+            print(f" Lỗi: {str(e)}")
             return None, None
 
 # Hàm thực hiện request đến Facebook API
